@@ -1,13 +1,10 @@
 const express = require("express");
-
-//const mongoose = require("mongoose");
-const app = express();
 const cors = require("cors");
-
-// const routes = require("./routes");
-
+//const mongoose = require("mongoose");
+const routes = require("./routes");
+const app = express();
 require("dotenv").config();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 //Requiring our models for syncing
 //const db = require('./models');
@@ -17,14 +14,11 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// if (process.env.NODE_ENV === "production") {
-app.use(express.static("client/build"));
-// }
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("client/build"));
+}
 
-const db = require("./models");
-
-//will uncomment when I have the routes
-// app.use(routes);
+app.use(routes);
 
 app.use(function (err, req, res, next) {
 	if (err.name === "UnauthorizedError") {
@@ -35,9 +29,9 @@ app.use(function (err, req, res, next) {
 });
 
 //Local connect
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", {
-	useNewUrlParser: true,
-});
+// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", {
+// 	useNewUrlParser: true,
+// });
 
 app.listen(PORT, function () {
 	console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
